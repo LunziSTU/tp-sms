@@ -1,6 +1,6 @@
 # tp-sms
 
-thinkphp6 短信验证码生成、验证类库
+适用于 thinkphp6 的短信验证码生成、验证类库
 
 ## 安装
 > composer require lunzi/tp-sms
