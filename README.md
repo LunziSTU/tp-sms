@@ -7,12 +7,12 @@
 * 基于 ThinkPHP 缓存
 * 灵活的配置机制
 
+## 安装
 ~~~php
 composer require lunzi/tp-sms
 ~~~
 
-
-## 使用
+## 使用示例
 
 ### 生成验证码
 
@@ -31,3 +31,6 @@ if(!$tpSms->check()){
     $msg = $tpSms->getErrorMsg();
 };
 ~~~
+
+## 版权信息
+TpSms遵循Apache2开源协议发布，并提供免费使用。
