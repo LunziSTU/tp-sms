@@ -29,7 +29,7 @@ $code = $tpSms->create();
 if(!$tpSms->check()){
     //验证失败，获取失败信息
     $msg = $tpSms->getErrorMsg();
-};
+}
 ~~~
 
 ## 版权信息
