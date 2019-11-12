@@ -1,0 +1,17 @@
+{
+    "name": "lunzi/tp-sms",
+    "authors": [
+        {
+            "name": "LunziSTU",
+            "email": "service@newphper.com"
+        }
+    ],
+    "require": {
+        "topthink/framework": "^6.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "lunzi\\": "src/"
+        }
+    }
+}
