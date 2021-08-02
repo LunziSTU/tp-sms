@@ -5,7 +5,7 @@ namespace lunzi;
 
 class TpSms
 {
-    private $config = null;
+    protected $config = [];
 
     protected $cachePrefix = 'tpsms';
     // 验证码字符池
@@ -26,13 +26,17 @@ class TpSms
     protected $mobileName = 'mobile';
     // 验证码字段名
     protected $codeName = 'code';
+//    手动传入手机号
+    protected $_mobile;
+//    手动传入验证码
+    protected $_code;
 
     /**
      * 架构方法，动态配置
      * TpSms constructor.
      * @param array $config
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         if (empty($config)) {
             $config = config('tpsms');
@@ -48,10 +52,34 @@ class TpSms
     /**
      * 设置场景值
      * @param string $scene
+     * @return $this
      */
-    public function scene(string $scene)
+    public function scene(string $scene): TpSms
     {
         $this->scene = $scene;
+        return $this;
+    }
+
+    /**
+     * 手动传入手机号
+     * @param string $mobile
+     * @return $this
+     */
+    public function mobile(string $mobile): TpSms
+    {
+        $this->_mobile = $mobile;
+        return $this;
+    }
+
+    /**
+     * 手动传入验证码
+     * @param string $code
+     * @return $this
+     */
+    public function code(string $code): TpSms
+    {
+        $this->_code = $code;
+        return $this;
     }
 
     /**
@@ -59,9 +87,13 @@ class TpSms
      * @return string
      * @throws \Exception
      */
-    public function create()
+    public function create(): string
     {
-        $mobile = input($this->mobileName);
+        $mobile = $this->_mobile ?? input($this->mobileName);
+
+        if (!$mobile) {
+            throw new \think\Exception('未传入手机号');
+        }
 
         switch ($this->type){
             case 1:
@@ -95,7 +127,7 @@ class TpSms
                 break;
             default:
 //                报错：不支持的验证码类型
-                abort('不支持的验证码类型');
+                throw new \think\Exception('不支持的验证码类型');
         }
 //        拼接验证码
         for ($i = 0; $i < $this->length; $i++){
@@ -113,7 +145,7 @@ class TpSms
      * 获取错误信息
      * @return string
      */
-    public function getErrorMsg()
+    public function getErrorMsg(): string
     {
         return $this->error;
     }
@@ -122,10 +154,16 @@ class TpSms
      * 验证码验证
      * @return bool
      */
-    public function check()
+    public function check(): bool
     {
-        $mobile = input($this->mobileName);
-        $code = input($this->codeName);
+        $mobile = $this->_mobile ?? input($this->mobileName);
+        if (!$mobile) {
+            throw new \think\Exception('未传入手机号');
+        }
+        $code = $this->_code ?? input($this->codeName);
+        if (!$code) {
+            throw new \think\Exception('未传入验证码');
+        }
 //        获取缓存验证码
         $cacheCode = cache($this->cachePrefix.$this->scene.$mobile);
         if($cacheCode){
